@@ -110,7 +110,7 @@ function ManagePurchase() {
                                 <td>{purchase.status?.name || purchase.status_id}</td>
                                 <td className="btn-group">
                                     <button onClick={() => navigate(`/purchases/${purchase.id}`)} className="btn btn-success">View</button>
-                                    <button onClick={() => navigate(`/purchases/${purchase.id}/edit`)} className="btn btn-primary">Edit</button>
+                                    {/* <button onClick={() => navigate(`/purchases/${purchase.id}/edit`)} className="btn btn-primary">Edit</button> */}
                                     <button onClick={() => handleDelete(purchase.id)} className="btn btn-danger">Delete</button>
                                 </td>
                             </tr>

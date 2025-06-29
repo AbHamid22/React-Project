@@ -29,7 +29,7 @@ const Sidebar = () => {
                   </NavLink>
                   </li>
 
-                   <li className="nav-item"><NavLink className="nav-link active" to="/reports">
+                  <li className="nav-item"><NavLink className="nav-link active" to="/reports">
                     <div className="d-flex align-items-center"><span className="nav-link-text ps-1">Reports</span>
                     </div>
                   </NavLink>
@@ -104,6 +104,29 @@ const Sidebar = () => {
               </li>
 
               <li className="nav-item">
+                {/* parent pages*/}<a className="nav-link dropdown-indicator" href="#customer" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="customer">
+                  <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="fas fa-money-bill-alt" /></span><span className="nav-link-text ps-1">Customer</span>
+                  </div>
+                </a>
+                <ul className="nav collapse" id="customer">
+                  <li className="nav-item"><NavLink className="nav-link active" to="/all-customer">
+                    <div className="d-flex align-items-center"><span className="nav-link-text ps-1">Customer List</span>
+                    </div>
+                  </NavLink>
+                    {/* more inner pages*/}
+                  </li>
+                  <li className="nav-item"><NavLink className="nav-link" to="/create-customer">
+                    <div className="d-flex align-items-center"><span className="nav-link-text ps-1">Create  Customer</span>
+                    </div>
+                  </NavLink>
+                    {/* more inner pages*/}
+                  </li>
+
+                </ul>
+              </li>
+
+
+              <li className="nav-item">
                 {/* parent pages*/}<a className="nav-link dropdown-indicator" href="#invoice" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dashboard">
                   <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="fas fa-money-bill-alt" /></span><span className="nav-link-text ps-1">Invoice Management</span>
                   </div>
@@ -140,6 +163,48 @@ const Sidebar = () => {
                   </li>
                   <li className="nav-item"><NavLink className="nav-link" to="/manage-mr">
                     <div className="d-flex align-items-center"><span className="nav-link-text ps-1">Manage Payment</span>
+                    </div>
+                  </NavLink>
+                    {/* more inner pages*/}
+                  </li>
+
+                </ul>
+              </li>
+               <li className="nav-item">
+                {/* parent pages*/}<a className="nav-link dropdown-indicator" href="#vendor" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="vendor">
+                  <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="fas fa-money-bill-alt" /></span><span className="nav-link-text ps-1">Vendor</span>
+                  </div>
+                </a>
+                <ul className="nav collapse" id="vendor">
+                  <li className="nav-item"><NavLink className="nav-link active" to="/all-vendor">
+                    <div className="d-flex align-items-center"><span className="nav-link-text ps-1">Vendor List</span>
+                    </div>
+                  </NavLink>
+                    {/* more inner pages*/}
+                  </li>
+                  <li className="nav-item"><NavLink className="nav-link" to="/create-vendor">
+                    <div className="d-flex align-items-center"><span className="nav-link-text ps-1">Create  Vendor</span>
+                    </div>
+                  </NavLink>
+                    {/* more inner pages*/}
+                  </li>
+
+                </ul>
+              </li>
+               <li className="nav-item">
+                {/* parent pages*/}<a className="nav-link dropdown-indicator" href="#person" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="person">
+                  <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="fas fa-money-bill-alt" /></span><span className="nav-link-text ps-1">Project Person</span>
+                  </div>
+                </a>
+                <ul className="nav collapse" id="person">
+                  <li className="nav-item"><NavLink className="nav-link active" to="/all-person">
+                    <div className="d-flex align-items-center"><span className="nav-link-text ps-1">ProjectPerson List</span>
+                    </div>
+                  </NavLink>
+                    {/* more inner pages*/}
+                  </li>
+                  <li className="nav-item"><NavLink className="nav-link" to="/create-person">
+                    <div className="d-flex align-items-center"><span className="nav-link-text ps-1">Create  ProjectPerson</span>
                     </div>
                   </NavLink>
                     {/* more inner pages*/}

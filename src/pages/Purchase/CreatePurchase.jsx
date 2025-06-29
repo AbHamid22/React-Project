@@ -1,6 +1,4 @@
-// PurchaseInvoiceComponent.jsx
 import React, { useState, useEffect } from 'react';
-
 
 const NewPurchase = () => {
     const [products, setProducts] = useState([]);
@@ -23,14 +21,29 @@ const NewPurchase = () => {
     }, []);
 
     const fetchData = async () => {
-        const [productRes, vendorRes, warehouseRes] = await Promise.all([
-            axios.get('/api/products'),
-            axios.get('/api/vendors'),
-            axios.get('/api/warehouses')
-        ]);
-        setProducts(productRes.data);
-        setVendors(vendorRes.data);
-        setWarehouses(warehouseRes.data);
+        try {
+            const [productRes, vendorRes, warehouseRes] = await Promise.all([
+                fetch('http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/products'),
+                fetch('http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/vendors'),
+                fetch('http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/warehouses')
+            ]);
+
+            if (!productRes.ok || !vendorRes.ok || !warehouseRes.ok) {
+                throw new Error('Failed to fetch one or more resources');
+            }
+
+            const productData = await productRes.json();
+            const vendorData = await vendorRes.json();
+            const warehouseData = await warehouseRes.json();
+
+            setProducts(Array.isArray(productData.data) ? productData.data : productData);
+            setVendors(Array.isArray(vendorData.data) ? vendorData.data : vendorData);
+            setWarehouses(Array.isArray(warehouseData.data) ? warehouseData.data : warehouseData);
+
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     };
 
     const addToCart = () => {
@@ -75,10 +88,18 @@ const NewPurchase = () => {
             purchase_total: netTotal(),
             items: cart
         };
-        const res = await axios.post('/api/purchases', data);
-        if (res.status === 200) {
+        try {
+            const res = await fetch('http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/purchases', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (!res.ok) throw new Error('Failed to save purchase');
             alert("Purchase saved successfully.");
             window.location.reload();
+        } catch (error) {
+            console.error(error);
+            alert('Failed to save purchase');
         }
     };
 
@@ -163,7 +184,7 @@ const NewPurchase = () => {
                                 <td className="text-end">{item.price}</td>
                                 <td>{item.qty}</td>
                                 <td>{item.uom_id}</td>
-                                <td>{item.discount}</td>
+                                <td>{item.discount.toFixed(2)}</td>
                                 <td className="text-end">{item.lineTotal.toFixed(2)}</td>
                                 <td><button className="btn btn-sm btn-danger" onClick={() => removeFromCart(item.id)}>Del</button></td>
                             </tr>
@@ -190,7 +211,7 @@ const NewPurchase = () => {
                             </tr>
                             <tr>
                                 <th>Paid Amount:</th>
-                                <td><input type="text" className="form-control text-end" value={paidAmount} onChange={e => setPaidAmount(parseFloat(e.target.value) || 0)} /></td>
+                                <td><input type="text" className="form-control text-end" value={paidAmount} onChange={e => setPaidAmount(parseFloat(e.target.value) || "")} /></td>
                             </tr>
                             <tr>
                                 <th>Due Amount:</th>

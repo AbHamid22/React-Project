@@ -1,77 +1,110 @@
-function ManageMR(){
-    return(
-   
-        <>
-        <meta charSet="UTF-8" />
-        <title>Money Receipt Form</title>
-        <style
-          dangerouslySetInnerHTML={{
-            __html:
-              '\n    body {\n      font-family: Arial, sans-serif;\n      margin: 30px;\n      background: #f9f9f9;\n    }\n    .container {\n      background: #fff;\n      padding: 20px;\n      border: 1px solid #ddd;\n      border-radius: 8px;\n      max-width: 1000px;\n      margin: auto;\n    }\n    h2, h3 {\n      text-align: center;\n    }\n    .btn {\n      padding: 8px 14px;\n      border: none;\n      border-radius: 5px;\n      color: white;\n      cursor: pointer;\n    }\n    .btn-green {\n      background-color: #28a745;\n    }\n    .btn-blue {\n      background-color: #007bff;\n    }\n    .btn-red {\n      background-color: #dc3545;\n    }\n    .table {\n      width: 100%;\n      border-collapse: collapse;\n      margin-top: 20px;\n      background: #fefefe;\n    }\n    .table th, .table td {\n      padding: 10px;\n      border: 1px solid #ccc;\n    }\n    .info-section {\n      text-align: center;\n      margin-top: 10px;\n    }\n    .info-section p {\n      margin: 5px 0;\n    }\n    .form-row {\n      margin-top: 20px;\n      display: flex;\n      justify-content: space-between;\n      flex-wrap: wrap;\n      gap: 10px;\n    }\n    label {\n      display: inline-block;\n      margin-right: 10px;\n    }\n    input[type="text"], select {\n      padding: 6px;\n      width: 200px;\n    }\n    .total-text {\n      text-align: right;\n      margin-top: 15px;\n      font-weight: bold;\n    }\n  '
-          }}
-        />
-        <div className="container">
-          <h2>Payment Management</h2>
-          <button className="btn btn-green">Manage Money Receipt</button>
-          <div className="info-section">
-            <img
-              src="https://img.icons8.com/ios-filled/50/000000/graduation-cap.png"
-              alt="School Logo"
-              width={50}
-            />
-            <br />
-            <strong>International Green School</strong>
-            <p>123 Badda Road, City Dhaka, Bangladesh</p>
-            <p>
-              <strong>Phone:</strong> 123456789
-            </p>
-            <p>
-              <strong>Email:</strong> intgreenschool@gmail.com
-            </p>
-            <h3>Money Receipt Form</h3>
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+const ManageMR = () => {
+  const [moneyReceipts, setMoneyReceipts] = useState([]);
+
+  const fetchReceipts = async () => {
+    try {
+      const res = await fetch('http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/moneyreceipts');
+      if (!res.ok) {
+        console.error('Failed to fetch receipts', res.status);
+        return;
+      }
+      const data = await res.json();
+      setMoneyReceipts(data || []);
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchReceipts();
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this receipt?')) return;
+
+    try {
+      const res = await fetch(`http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/moneyreceipts/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      });
+
+      if (res.ok) {
+        alert('Receipt deleted successfully.');
+        fetchReceipts();
+      } else {
+        alert('Failed to delete receipt.');
+      }
+    } catch (error) {
+      alert('Network error');
+    }
+  };
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  return (
+    <div className="container mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="mb-0">MoneyReceipt History</h3>
+        <Link to="/moneyreceipts/create" className="btn btn-primary">
+          <i className="bi bi-plus-circle"></i> Create New MR
+        </Link>
+      </div>
+
+      <div className="row g-4">
+        {moneyReceipts.length === 0 && (
+          <p className="text-center">No receipts found.</p>
+        )}
+        {moneyReceipts.map((receipt) => (
+          <div key={receipt.id} className="col-12 col-md-6 col-lg-4">
+            <div className="card border-0 shadow-sm rounded-4 h-100">
+              <div className="card-body">
+                <h5 className="card-title fw-semibold mb-2">Receipt #{receipt.id}</h5>
+                <ul className="list-unstyled small text-muted mb-3">
+                  <li><strong className="text-dark">Customer ID:</strong> {receipt.customer_id}</li>
+                  <li><strong className="text-dark">Remark:</strong> {receipt.remark || 'N/A'}</li>
+                  <li><strong className="text-dark">Total:</strong> TK {parseFloat(receipt.total_amount).toLocaleString()}</li>
+                  <li><strong className="text-dark">Discount:</strong> TK {parseFloat(receipt.discount || 0).toFixed(2)}</li>
+                  <li><strong className="text-dark">VAT:</strong> TK {parseFloat(receipt.vat || 0).toFixed(2)}</li>
+                  <li><strong className="text-dark">Paid:</strong> TK {parseFloat(receipt.paid_amount || 0).toLocaleString()}</li>
+                  <li><strong className="text-dark">Method:</strong> {receipt.payment_method || 'N/A'}</li>
+                  <li><strong className="text-dark">Created:</strong> {formatDate(receipt.created_at)}</li>
+                </ul>
+              </div>
+              <div className="card-footer bg-light border-0 d-flex justify-content-between">
+                <Link to={`/moneyreceipts/${receipt.id}`} className="btn btn-info btn-sm rounded-pill">
+                  <i className="bi bi-eye"></i> View
+                </Link>
+                <Link to={`/moneyreceipts/${receipt.id}/edit`} className="btn btn-success btn-sm rounded-pill">
+                  <i className="bi bi-pencil"></i> Edit
+                </Link>
+                <button
+                  className="btn btn-danger btn-sm rounded-pill"
+                  onClick={() => handleDelete(receipt.id)}
+                >
+                  <i className="bi bi-trash"></i> Delete
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="form-row">
-            <label>
-              Receipt No: <strong>MR-49</strong>
-            </label>
-            <label>
-              Received From:
-              <select>
-                <option>Jahidul Islam</option>
-              </select>
-            </label>
-            <label>
-              Date: <strong>16-Apr-2025</strong>
-            </label>
-            <label>
-              Payment Method: <strong>Cash</strong>
-            </label>
-          </div>
-          <table className="table" id="servicesTable">
-            <thead>
-              <tr>
-                <th>Services</th>
-                <th>Unit</th>
-                <th>Price</th>
-                <th>Total</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="serviceRows">{/* Dynamic rows go here */}</tbody>
-          </table>
-          {/* <button className="btn btn-blue" onclick="addRow()">
-            + Add Row
-          </button> */}
-          <button className="btn btn-blue" style={{ marginTop: 20 }}>
-            Save Money Receipt
-          </button>
-          <div className="total-text" id="grandTotal">
-            Total: 0
-          </div>
-        </div>
-      </>
-    );
-    
-    
-}
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default ManageMR;

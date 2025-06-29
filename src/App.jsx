@@ -11,12 +11,6 @@ import CreateMR from './pages/MoneyR/CreateMR'
 import ManageMR from './pages/MoneyR/ManageMR'
 import Home from './pages/Dashboard/Home'
 import Dashboard from './pages/Dashboard/Dashboard'
-import CreateRoutine from './pages/Routine/CreateRoutine'
-import ManageRoutine from './pages/Routine/ManageRoutine'
-import CreateTeacher from './pages/Teacher/CreateTeacher'
-import ManageTeacher from './pages/Teacher/ManageTeacher'
-import CreateResult from './pages/Result/CreateResult'
-import ManageResult from './pages/Result/ManageResult'
 import CreateClass from './pages/Classs/CreateClass'
 import ManageClass from './pages/Classs/ManageClass'
 import CreateSubject from './pages/Subject/CreateSubject'
@@ -42,6 +36,13 @@ import AllProperty from './pages/Property/AllProperty'
 import CreateProperty from './pages/Property/CreateProperty'
 import ViewProperty from './pages/Property/ViewProperty'
 import EditProperty from './pages/Property/EditProperty'
+import AllCustomer from './pages/Customer/AllCustomer'
+import CreateCustomer from './pages/Customer/CreateCustomer'
+import AllVendor from './pages/Vendor/AllVendor'
+import CreateVendor from './pages/Vendor/CreateVendor'
+import AllPerson from './pages/ProjectPerson/AllPerson'
+import CreatePerson from './pages/ProjectPerson/CreatePerson'
+import ViewInvoice from './pages/Invoice/ViewInvoice'
 
 
 
@@ -82,18 +83,19 @@ const App = () => {
 
           <Route path="create-invoice" element={<CreateInvoice />} />
           <Route path="manage-invoice" element={<ManageInvoice />} />
+           <Route path="invoices/:id" element={<ViewInvoice />} />
 
           <Route path="create-mr" element={<CreateMR />} />
           <Route path="manage-mr" element={<ManageMR />} />
 
-          <Route path="create-routine" element={<CreateRoutine />} />
-          <Route path="manage-routine" element={<ManageRoutine />} />
+          <Route path="all-customer" element={<AllCustomer />} />
+          <Route path="create-customer" element={<CreateCustomer />} />
 
-          <Route path="create-teacher" element={<CreateTeacher />} />
-          <Route path="manage-teacher" element={<ManageTeacher />} />
+          <Route path="all-vendor" element={<AllVendor />} />
+          <Route path="create-vendor" element={<CreateVendor />} />
 
-          <Route path="create-result" element={<CreateResult />} />
-          <Route path="manage-result" element={<ManageResult />} />
+          <Route path="all-person" element={<AllPerson />} />
+          <Route path="create-person" element={<CreatePerson />} />
 
           <Route path="create-class" element={<CreateClass />} />
           <Route path="manage-class" element={<ManageClass />} />

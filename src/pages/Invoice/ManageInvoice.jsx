@@ -1,141 +1,107 @@
-// function ManageInvoice(){
-//     return(
-//         <>  
-//        <>
-//   <meta charSet="UTF-8" />
-//   <title>View Invoice</title>
-//   <style
-//     dangerouslySetInnerHTML={{
-//       __html:
-//         "\n        body {\n            font-family: Arial, sans-serif;\n            margin: 20px;\n            background: #f9f9f9;\n        }\n        .btn {\n            padding: 6px 12px;\n            border: none;\n            border-radius: 4px;\n            color: white;\n            cursor: pointer;\n        }\n        .btn-green {\n            background-color: #28a745;\n        }\n        .btn-blue {\n            background-color: #007bff;\n        }\n        .btn-light-blue {\n            background-color: #5bc0de;\n        }\n        .btn-red {\n            background-color: #dc3545;\n        }\n        .btn:disabled {\n            background-color: #ccc;\n            cursor: not-allowed;\n        }\n        .table-container {\n            margin-top: 20px;\n        }\n        table {\n            width: 100%;\n            border-collapse: collapse;\n            background-color: white;\n        }\n        th, td {\n            padding: 10px;\n            border-bottom: 1px solid #ccc;\n            text-align: center;\n        }\n        th {\n            background-color: #f1f1f1;\n        }\n        .pagination {\n            margin-top: 20px;\n            display: flex;\n            gap: 4px;\n            align-items: center;\n        }\n        .pagination button {\n            padding: 5px 10px;\n        }\n        .pagination input {\n            width: 40px;\n            text-align: center;\n            padding: 5px;\n        }\n    "
-//     }}
-//   />
-//   <h2>View Invoice</h2>
-//   <button className="btn btn-green">Create Invoice</button>
-//   <div className="table-container">
-//     <table>
-//       <thead>
-//         <tr>
-//           <th>Id</th>
-//           <th>Student</th>
-//           <th>Issue Date</th>
-//           <th>Due Date</th>
-//           <th>Total</th>
-//           <th>Action</th>
-//         </tr>
-//       </thead>
-//       <tbody>
-//         <tr>
-//           <td>8</td>
-//           <td>Abdul Hamid</td>
-//           <td>2025-04-15</td>
-//           <td>2025-04-15</td>
-//           <td>3000</td>
-//           <td>
-//             <button className="btn btn-light-blue">Details</button>
-//             <button className="btn btn-blue">Edit</button>
-//             <button className="btn btn-red">Delete</button>
-//           </td>
-//         </tr>
-//         {/* Repeat rows as needed */}
-//       </tbody>
-//     </table>
-//   </div>
-//   <div className="pagination">
-//     <button className="btn" disabled="">
-//       First
-//     </button>
-//     <button className="btn" disabled="">
-//       Prev
-//     </button>
-//     <button className="btn btn-blue">1</button>
-//     <button className="btn">Next</button>
-//     <button className="btn">Last</button>
-//     <input type="text" placeholder={1} />
-//     <button className="btn btn-blue">Go</button>
-//   </div>
-// </>
+import React, { useEffect, useState } from 'react';
+import {Link} from "react-router-dom";
 
-//         </>
-//     );
-// }
-// export default ManageInvoice;
+const ManageInvoice = () => {
+  const [invoices, setInvoices] = useState([]);
 
+  const fetchInvoices = async () => {
+    try {
+      const res = await fetch('http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/invoices');
+      if (!res.ok) {
+        console.error('Network response not ok', res.status);
+        return;
+      }
+      const data = await res.json();
+      setInvoices(data); 
+    } catch (error) {
+      console.error('Failed to fetch invoices', error);
+    }
+  };
 
-import { useState,useEffect } from "react";
-import Card from "../UI/Card";
+  useEffect(() => {
+    fetchInvoices();
+  }, []);
 
-function ManageInvoice(){
-  
-    const[invoice,setInvoice]=useState([]);
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
 
-    useEffect(()=>{  
-      fetchProducts();      
-    });
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this invoice?')) return;
+    try {
+      const res = await fetch(`http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/invoices/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+          'Accept': 'application/json',
+        },
+      });
+      if (res.ok) {
+        alert('Invoice deleted successfully');
+        fetchInvoices(); // refresh list
+      } else {
+        alert('Failed to delete invoice');
+      }
+    } catch (err) {
+      alert('Network error');
+    }
+  };
 
-    const fetchProducts = async () => {
-        try {
-          const res = await fetch(`http://hamid.intelsofts.com/School_Project/api/invoice`,{
-            method:"GET",
-            headers:{
-               "Content-Type":"application/json",
-               "Accept":"application/json"
-            }
-          });
+  return (
+    <div className="container mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="mb-0">Manage Invoices</h3>
+        <a href="/create-invoices" className="btn btn-primary">
+          <i className="bi bi-plus-circle"></i> New Invoice
+        </a>
+      </div>
 
-          if (!res.ok) {
-            throw new Error('Failed to fetch users');
-          }
+      <div className="row g-4">
+        {invoices.length === 0 && (
+          <p className="text-center">No invoices found.</p>
+        )}
+        {invoices.map(invoice => (
+          <div key={invoice.id} className="col-12 col-md-6 col-lg-4">
+            <div className="card border-0 shadow-sm rounded-4 h-100">
+              <div className="card-body">
+                <h5 className="card-title fw-semibold mb-2">Invoice #{invoice.id}</h5>
+                <ul className="list-unstyled small text-muted mb-3">
+                  <li><strong className="text-dark mb-1">Customer ID:</strong> {invoice.customer_id}</li>
+                  <li><strong className="text-dark mb-1">Total:</strong> TK {Number(invoice.total_amount).toFixed(2)}</li>
+                  <li><strong className="text-dark mb-1">Status:</strong>
+                    <span className={`badge bg-${invoice.status === 'Paid' ? 'success' : invoice.status === 'Unpaid' ? 'warning' : 'secondary'}`}>
+                      {invoice.status ? invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1) : 'N/A'}
+                    </span>
+                  </li>
+                  <li><strong className="text-dark mb-1">Issue Date:</strong> {formatDate(invoice.issue_date)}</li>
+                  <li><strong className="text-dark mb-1">Due Date:</strong> {formatDate(invoice.due_date)}</li>
+                </ul>
+              </div>
+          
+              <div className="card-footer bg-light border-0 d-flex justify-content-between">
+                <Link to={`/invoices/${invoice.id}`} className="btn btn-info btn-sm rounded-pill">
+                  <i className="bi bi-eye"></i> View
+                </Link>
+                <Link to={`/invoices/edit/${invoice.id}`} className="btn btn-success btn-sm rounded-pill">
+                  <i className="bi bi-pencil"></i> Edit
+                </Link>
+                <button
+                  className="btn btn-danger btn-sm rounded-pill"
+                  onClick={() => handleDelete(invoice.id)}
+                >
+                  <i className="bi bi-trash"></i> Delete
+                </button>
+              </div>
 
-          const data = await res.json();
-          setInvoice(data.invoices);
+            </div>
+          </div>
+        ))}
+      </div>
 
-        } catch (err) {
-          console.error('Error:', err.message);
-        }
-    };
- 
-   
-    return(
-        <>
-        <Card title="Student Details">
-        <table className="table">
-        <tr>
-            <th>Id</th>
-            {/* <th>Photo</th> */}
-            {/* <th>Name</th> */}
-            <th>Student</th>
-            <th>Issue Date</th>
-            <th>Due Date</th>
-            <th>Total</th>
-            {/* <th>Father`s Name</th> */}
-           
-            {/* <th>Mother`s Name</th>? */}
-            <th>Action</th>
-            </tr>
-            {invoice.map(student => (
-                <tr key={student.id}>
-                    <td>{student.id}</td>
-                    {/* <td><img src={`http://hamid.intelsofts.com/School_Project/img/${student.photo}`} width="100" /></td> */}
-                    <td>{student.name}</td>
-                    <td>{student.issue_date}</td>
-                    <td>{student.due_date}</td>
-                    <td>{student.total}</td>
-                    {/* <td>{student.fathers_name}</td> */}
-                    {/* <td>{product.barcode}</td> */}
-                   
-                    {/* <td>{student.mothers_name}</td> */}
-                    <td className="btn-group">
-                        <a className="btn btn-success text-success">View</a>
-                        <a className="btn btn-primary text-primary">Edit</a>
-                        <a className="btn btn-danger text-danger">Delete</a>
-                    </td>
-                </tr>
-            ))}
-        </table>
-        </Card>
-        </>
-    )
-}
+      {/* No pagination because API doesn't support it */}
+    </div>
+  );
+};
 
 export default ManageInvoice;
