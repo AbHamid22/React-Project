@@ -105,7 +105,7 @@ const Sidebar = () => {
 
               <li className="nav-item">
                 {/* parent pages*/}<a className="nav-link dropdown-indicator" href="#customer" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="customer">
-                  <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="fas fa-money-bill-alt" /></span><span className="nav-link-text ps-1">Customer</span>
+                  <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="menu-icon fa fa-users" /></span><span className="nav-link-text ps-1">Customer</span>
                   </div>
                 </a>
                 <ul className="nav collapse" id="customer">
@@ -172,7 +172,7 @@ const Sidebar = () => {
               </li>
                <li className="nav-item">
                 {/* parent pages*/}<a className="nav-link dropdown-indicator" href="#vendor" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="vendor">
-                  <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="fas fa-money-bill-alt" /></span><span className="nav-link-text ps-1">Vendor</span>
+                  <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="menu-icon fa fa-users" /></span><span className="nav-link-text ps-1">Vendor</span>
                   </div>
                 </a>
                 <ul className="nav collapse" id="vendor">
@@ -193,7 +193,7 @@ const Sidebar = () => {
               </li>
                <li className="nav-item">
                 {/* parent pages*/}<a className="nav-link dropdown-indicator" href="#person" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="person">
-                  <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="fas fa-money-bill-alt" /></span><span className="nav-link-text ps-1">Project Person</span>
+                  <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="menu-icon fa fa-user" /></span><span className="nav-link-text ps-1">Project Person</span>
                   </div>
                 </a>
                 <ul className="nav collapse" id="person">

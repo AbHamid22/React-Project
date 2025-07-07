@@ -104,7 +104,7 @@ const ViewInvoice = ({ invoice, customer, company, items }) => {
       <div className="invoice-box">
         <div className="invoice-header">
           <div>
-            <img src="/assets/images/hami-logo.png" alt="Company Logo" />
+            <img src="http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/assets/images/hami-logo.png" alt="Company Logo" />
           </div>
           <div className="company-details">
             <h4 className="fw-bold mb-0">{company.name}</h4>
@@ -138,7 +138,7 @@ const ViewInvoice = ({ invoice, customer, company, items }) => {
             <div style={{ marginTop: 8 }}>
               {customer.photo ? (
                 <img
-                  src={`/img/customers/${customer.photo}`}
+                  src={`http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/img/customers/${customer.photo}`}
                   alt="Customer Photo"
                   width={80}
                   style={{ border: "1px solid #ccc", borderRadius: 4 }}
@@ -153,7 +153,7 @@ const ViewInvoice = ({ invoice, customer, company, items }) => {
             <table style={{ border: "none" }}>
               <tbody>
                 <tr>
-                  <th style={{ paddingRight: 15, textAlign: "left" }}>Invoice #</th>
+                  <th style={{ paddingRight: 15, textAlign: "left" }}>Invoice </th>
                   <td>{invoice.id}</td>
                 </tr>
                 <tr>
@@ -189,7 +189,7 @@ const ViewInvoice = ({ invoice, customer, company, items }) => {
               items.map((item, index) => {
                 const propertyName = item.property?.title || "Property not found!";
                 const projectName = item.project?.name || "N/A";
-                const amount = Number(item.amount || 0);
+                const amount = Number(item.amount || 0);  
                 const discount = Number(item.discount || 0);
                 subtotal += amount;
                 totalDiscount += discount;

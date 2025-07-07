@@ -43,6 +43,7 @@ import CreateVendor from './pages/Vendor/CreateVendor'
 import AllPerson from './pages/ProjectPerson/AllPerson'
 import CreatePerson from './pages/ProjectPerson/CreatePerson'
 import ViewInvoice from './pages/Invoice/ViewInvoice'
+import ViewMR from './pages/MoneyR/ViewMR'
 
 
 
@@ -87,6 +88,7 @@ const App = () => {
 
           <Route path="create-mr" element={<CreateMR />} />
           <Route path="manage-mr" element={<ManageMR />} />
+           <Route path="moneyreceipts/:id" element={<ViewMR />} />
 
           <Route path="all-customer" element={<AllCustomer />} />
           <Route path="create-customer" element={<CreateCustomer />} />
