@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+const API = 'http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/moneyreceipts';
+
 const ManageMR = () => {
   const [moneyReceipts, setMoneyReceipts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
 
-  const fetchReceipts = async () => {
+  const fetchReceipts = async (page = 1) => {
     try {
-      const res = await fetch('http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/moneyreceipts');
+      const res = await fetch(`${API}?page=${page}`);
       if (!res.ok) {
         console.error('Failed to fetch receipts', res.status);
         return;
       }
       const data = await res.json();
-      setMoneyReceipts(data || []);
+      setMoneyReceipts(data.data || []);
+      setCurrentPage(data.current_page);
+      setLastPage(data.last_page);
     } catch (error) {
       console.error('Fetch error:', error);
     }
@@ -26,7 +32,7 @@ const ManageMR = () => {
     if (!window.confirm('Are you sure you want to delete this receipt?')) return;
 
     try {
-      const res = await fetch(`http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/moneyreceipts/${id}`, {
+      const res = await fetch(`${API}/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -36,7 +42,7 @@ const ManageMR = () => {
 
       if (res.ok) {
         alert('Receipt deleted successfully.');
-        fetchReceipts();
+        fetchReceipts(currentPage);
       } else {
         alert('Failed to delete receipt.');
       }
@@ -56,11 +62,31 @@ const ManageMR = () => {
     });
   };
 
+  const renderPagination = () => (
+    <div className="d-flex justify-content-center mt-4">
+      <nav>
+        <ul className="pagination">
+          <li className={`page-item ${currentPage === 1 && 'disabled'}`}>
+            <button className="page-link" onClick={() => fetchReceipts(currentPage - 1)}>Previous</button>
+          </li>
+          {[...Array(lastPage)].map((_, i) => (
+            <li key={i} className={`page-item ${currentPage === i + 1 && 'active'}`}>
+              <button className="page-link" onClick={() => fetchReceipts(i + 1)}>{i + 1}</button>
+            </li>
+          ))}
+          <li className={`page-item ${currentPage === lastPage && 'disabled'}`}>
+            <button className="page-link" onClick={() => fetchReceipts(currentPage + 1)}>Next</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
+
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h3 className="mb-0">MoneyReceipt History</h3>
-        <Link to="/moneyreceipts/create" className="btn btn-primary">
+        <Link to="/create-mr" className="btn btn-primary">
           <i className="bi bi-plus-circle"></i> Create New MR
         </Link>
       </div>
@@ -75,7 +101,9 @@ const ManageMR = () => {
               <div className="card-body">
                 <h5 className="card-title fw-semibold mb-2">Receipt #{receipt.id}</h5>
                 <ul className="list-unstyled small text-muted mb-3">
-                  <li><strong className="text-dark">Customer ID:</strong> {receipt.customer_id}</li>
+                  <li><strong className="text-dark">Customer:</strong> {receipt.customer?.name || 'N/A'}</li>
+                  <li><strong className="text-dark">Email:</strong> {receipt.customer?.email || 'N/A'}</li>
+                  <li><strong className="text-dark">Phone:</strong> {receipt.customer?.phone || 'N/A'}</li>
                   <li><strong className="text-dark">Remark:</strong> {receipt.remark || 'N/A'}</li>
                   <li><strong className="text-dark">Total:</strong> TK {parseFloat(receipt.total_amount).toLocaleString()}</li>
                   <li><strong className="text-dark">Discount:</strong> TK {parseFloat(receipt.discount || 0).toFixed(2)}</li>
@@ -89,20 +117,22 @@ const ManageMR = () => {
                 <Link to={`/moneyreceipts/${receipt.id}`} className="btn btn-info btn-sm rounded-pill">
                   <i className="bi bi-eye"></i> View
                 </Link>
-                <Link to={`/moneyreceipts/${receipt.id}/edit`} className="btn btn-success btn-sm rounded-pill">
+                {/* <Link to={`/moneyreceipts/${receipt.id}/edit`} className="btn btn-success btn-sm rounded-pill">
                   <i className="bi bi-pencil"></i> Edit
-                </Link>
-                <button
+                </Link> */}
+                {/* <button
                   className="btn btn-danger btn-sm rounded-pill"
                   onClick={() => handleDelete(receipt.id)}
                 >
                   <i className="bi bi-trash"></i> Delete
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {lastPage > 1 && renderPagination()}
     </div>
   );
 };

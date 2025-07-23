@@ -1,4 +1,6 @@
+
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 const ViewInvoice = ({ invoice, customer, company, items }) => {
   if (!invoice || !customer || !company) return <p>Loading...</p>;
@@ -122,16 +124,10 @@ const ViewInvoice = ({ invoice, customer, company, items }) => {
             <h6 className="text-uppercase text-muted fw-semibold">Customer</h6>
             <p className="mb-1 fw-semibold">{customer.name}</p>
             <p className="mb-1">
-              📧{" "}
-              <a href={`mailto:${customer.email}`}>
-                {customer.email}
-              </a>
+              📧 <a href={`mailto:${customer.email}`}>{customer.email}</a>
             </p>
             <p>
-              📞{" "}
-              <a href={`tel:+880${customer.phone}`}>
-                +880 {customer.phone}
-              </a>
+              📞 <a href={`tel:+880${customer.phone}`}>+880 {customer.phone}</a>
             </p>
 
             <strong>Photo:</strong>
@@ -189,7 +185,7 @@ const ViewInvoice = ({ invoice, customer, company, items }) => {
               items.map((item, index) => {
                 const propertyName = item.property?.title || "Property not found!";
                 const projectName = item.project?.name || "N/A";
-                const amount = Number(item.amount || 0);  
+                const amount = Number(item.amount || 0);
                 const discount = Number(item.discount || 0);
                 subtotal += amount;
                 totalDiscount += discount;
@@ -229,10 +225,7 @@ const ViewInvoice = ({ invoice, customer, company, items }) => {
                 </tr>
                 <tr>
                   <th className="text-success fw-bold">To Be Paid</th>
-                  <td
-                    className="fw-bold text-success text-end"
-                    style={{ fontSize: "1.25rem" }}
-                  >
+                  <td className="fw-bold text-success text-end" style={{ fontSize: "1.25rem" }}>
                     {formatCurrency(subtotal - totalDiscount)} BDT
                   </td>
                 </tr>
@@ -251,7 +244,52 @@ const ViewInvoice = ({ invoice, customer, company, items }) => {
   );
 };
 
-const InvoiceContainer = ({ invoiceId }) => {
+
+// const InvoiceContainer = ({ invoiceId }) => {
+//   const [invoice, setInvoice] = useState(null);
+//   const [customer, setCustomer] = useState(null);
+//   const [company, setCompany] = useState(null);
+//   const [items, setItems] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   useEffect(() => {
+//     async function fetchInvoiceData() {
+//       try {
+//         const res = await fetch(`http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/invoices/${invoiceId}`);
+//         if (!res.ok) throw new Error("Failed to fetch");
+//         const data = await res.json();
+
+//         setInvoice(data.invoice || null);
+//         setCustomer(data.customer || data.invoice?.customer || null);
+//         setCompany(data.company || null);
+//         setItems(data.items || data.invoice?.items || []);
+
+//         setLoading(false);
+//       } catch (err) {
+//         setError(err.message || "Error fetching data");
+//         setLoading(false);
+//       }
+//     }
+
+//     fetchInvoiceData();
+//   }, [invoiceId]);
+
+//   if (loading) return <p>Loading invoice data...</p>;
+//   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+
+//   return <ViewInvoice invoice={invoice} customer={customer} company={company} items={items} />;
+// };
+
+// export default InvoiceContainer;
+
+
+
+
+
+
+const InvoiceContainer = () => {
+  const { id: invoiceId } = useParams(); // get invoiceId from URL param "id"
   const [invoice, setInvoice] = useState(null);
   const [customer, setCustomer] = useState(null);
   const [company, setCompany] = useState(null);
@@ -260,17 +298,18 @@ const InvoiceContainer = ({ invoiceId }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!invoiceId) return; // don't fetch if no ID
+
     async function fetchInvoiceData() {
       try {
-        const res = await fetch(`http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/invoices/2`);
+        const res = await fetch(`http://hamid.intelsofts.com/MyLaravelProject/RealEstate/public/api/invoices/${invoiceId}`);
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
 
-        // Adapt this if your API structure differs
-        setInvoice(data || data);
-        setCustomer(data.data || (data.invoice && data.invoice.customer) || null);
-        setCompany(data.company || { name: "My Company", street_address: "", area: "", city: "" }); // fallback
-        setItems(data.items || (data.invoice && data.invoice.items) || []);
+        setInvoice(data.invoice || null);
+        setCustomer(data.customer || data.invoice?.customer || null);
+        setCompany(data.company || null);
+        setItems(data.items || data.invoice?.items || []);
 
         setLoading(false);
       } catch (err) {
@@ -278,6 +317,7 @@ const InvoiceContainer = ({ invoiceId }) => {
         setLoading(false);
       }
     }
+
     fetchInvoiceData();
   }, [invoiceId]);
 

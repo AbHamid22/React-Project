@@ -29,7 +29,7 @@ const Sidebar = () => {
                   </NavLink>
                   </li>
 
-                  <li className="nav-item"><NavLink className="nav-link active" to="/reports">
+                  <li className="nav-item"><NavLink className="nav-link active" to="/all-progressive">
                     <div className="d-flex align-items-center"><span className="nav-link-text ps-1">Reports</span>
                     </div>
                   </NavLink>
@@ -78,6 +78,40 @@ const Sidebar = () => {
                     {/* more inner pages*/}
                   </li>
 
+                </ul>
+              </li>
+
+
+              <li className="nav-item">
+                {/* parent pages*/}<a className="nav-link dropdown-indicator" href="#progressive" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="progressive">
+                  <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="fa fa-chart-pie" /></span><span className="nav-link-text ps-1">Project Progressive</span>
+                  </div>
+                </a>
+                <ul className="nav collapse" id="progressive">
+                  <li className="nav-item"><NavLink className="nav-link active" to="/all-progressive">
+                    <div className="d-flex align-items-center"><span className="nav-link-text ps-1">All Progressive</span>
+                    </div>
+                  </NavLink>
+                    {/* more inner pages*/}
+                  </li>
+            
+                </ul>
+              </li>
+
+
+               <li className="nav-item">
+                {/* parent pages*/}<a className="nav-link dropdown-indicator" href="#costing" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="costing">
+                  <div className="d-flex align-items-center"><span className="nav-link-icon"><span className="fa fa-calculator" /></span><span className="nav-link-text ps-1">Project Costing</span>
+                  </div>
+                </a>
+                <ul className="nav collapse" id="costing">
+                  <li className="nav-item"><NavLink className="nav-link active" to="/all-p-costing">
+                    <div className="d-flex align-items-center"><span className="nav-link-text ps-1">All Project Costing</span>
+                    </div>
+                  </NavLink>
+                    {/* more inner pages*/}
+                  </li>
+            
                 </ul>
               </li>
 

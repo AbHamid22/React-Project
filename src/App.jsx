@@ -44,6 +44,10 @@ import AllPerson from './pages/ProjectPerson/AllPerson'
 import CreatePerson from './pages/ProjectPerson/CreatePerson'
 import ViewInvoice from './pages/Invoice/ViewInvoice'
 import ViewMR from './pages/MoneyR/ViewMR'
+import AllProgressive from './pages/ProjectProgressive/AllProgressive'
+import ViewProgressive from './pages/ProjectProgressive/ViewProgressive'
+import AllCosting from './pages/ProjectCosting/AllCosting'
+import ViewCosting from './pages/ProjectCosting/ViewCosting'
 
 
 
@@ -75,6 +79,12 @@ const App = () => {
           <Route path="create-project" element={<CreateProject />} />
           <Route path="projects/:id" element={<ViewProject />} />
           <Route path="projects/:id/edit" element={<EditProject />} />
+
+           <Route path="all-progressive" element={<AllProgressive />} />
+           <Route path="progresse/:id" element={<ViewProgressive />} />
+
+             <Route path="all-p-costing" element={<AllCosting />} />
+           <Route path="projectcostings/:id" element={<ViewCosting />} />
 
           <Route path="all-property" element={<AllProperty />} />
           <Route path="create-property" element={<CreateProperty />} />
